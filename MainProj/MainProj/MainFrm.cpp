@@ -462,9 +462,15 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 }
 void CMainFrame::OnGateAnd()
 {
-	CView* pView = GetActiveView();
-	if (pView)
-		pView->SendMessage(WM_USER + 1, ID_GATE_AND);
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	if (pFrame)
+	{
+		CView* pView = pFrame->GetActiveView();
+		if (pView)
+		{
+			pView->SendMessage(WM_USER + 1, ID_GATE_AND);
+		}
+	}
 }
 
 void CMainFrame::OnGateOr()
@@ -480,3 +486,4 @@ void CMainFrame::OnGateNot()
 	if (pView)
 		pView->SendMessage(WM_USER + 1, ID_GATE_NOT);
 }
+

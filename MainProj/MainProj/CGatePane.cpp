@@ -5,6 +5,9 @@
 // GatePane.cpp
 BEGIN_MESSAGE_MAP(CGatePane, CDockablePane)
     ON_WM_CREATE()
+    ON_BN_CLICKED(ID_GATE_AND, &CGatePane::OnBnClickedAnd)
+    ON_BN_CLICKED(ID_GATE_OR, &CGatePane::OnBnClickedOr)
+    ON_BN_CLICKED(ID_GATE_NOT, &CGatePane::OnBnClickedNot)
 END_MESSAGE_MAP()
 
 int CGatePane::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -43,6 +46,66 @@ int CGatePane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
     return 0;
 }
+
+void CGatePane::OnBnClickedAnd()
+{   
+   // AfxMessageBox(_T("AND button clicked!"));
+    // AfxGetMainWnd()->SendMessage(WM_USER + 1, ID_GATE_AND);
+
+    CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetMainWnd();
+    if (pFrame)
+    {
+        CMDIChildWnd* pChild = (CMDIChildWnd*)pFrame->GetActiveFrame();
+        if (pChild)
+        {
+            CView* pView = (CView*)pChild->GetActiveView();
+            if (pView)
+            {
+                pView->SendMessage(WM_USER + 1, ID_GATE_AND);
+            }
+        }
+    }
+}
+
+void CGatePane::OnBnClickedOr()
+{
+    CFrameWnd* pFrame = (CFrameWnd*)AfxGetMainWnd();
+    if (pFrame)
+    {
+        CView* pView = pFrame->GetActiveView();
+        if (pView)
+        {
+            pView->SendMessage(WM_USER + 1, ID_GATE_OR);
+        }
+    }
+}
+
+void CGatePane::OnBnClickedNot()
+{
+    CFrameWnd* pFrame = (CFrameWnd*)AfxGetMainWnd();
+    if (pFrame)
+    {
+        CView* pView = pFrame->GetActiveView();
+        if (pView)
+        {
+            pView->SendMessage(WM_USER + 1, ID_GATE_NOT);
+        }
+    }
+}
+
+void CGatePane::SendGateInsertMessage(UINT gateID)
+{
+    CFrameWnd* pFrame = (CFrameWnd*)AfxGetMainWnd();
+    if (pFrame)
+    {
+        CView* pView = pFrame->GetActiveView();
+        if (pView)
+        {
+            pView->SendMessage(WM_USER + 1, gateID);
+        }
+    }
+}
+
 
 
 

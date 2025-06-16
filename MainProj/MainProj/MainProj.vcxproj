@@ -222,6 +222,12 @@
     <ResourceCompile Include="MainProj.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\..\..\Downloads\icons8-tank-32.png" />
+    <Image Include="..\..\..\..\..\..\Downloads\sample_1280×853.bmp" />
+    <Image Include="..\..\..\..\..\..\Downloads\sample_1920×1280.bmp" />
+    <Image Include="..\..\..\..\..\..\Downloads\sample_640×426.bmp" />
+    <Image Include="res\bitmap1.bmp" />
+    <Image Include="res\bitmap5.bmp" />
     <Image Include="res\classview.bmp" />
     <Image Include="res\classview_hc.bmp" />
     <Image Include="res\class_view.ico" />

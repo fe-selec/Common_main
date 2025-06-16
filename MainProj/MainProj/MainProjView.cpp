@@ -1,128 +1,150 @@
-
-// MainProjView.cpp : implementation of the CMainProjView class
-//
-
 #include "pch.h"
 #include "framework.h"
-// SHARED_HANDLERS can be defined in an ATL project implementing preview, thumbnail
-// and search filter handlers and allows sharing of document code with that project.
-#ifndef SHARED_HANDLERS
 #include "MainProj.h"
-#endif
-
 #include "MainProjDoc.h"
 #include "MainProjView.h"
+#include "resource.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-
-// CMainProjView
-
 IMPLEMENT_DYNCREATE(CMainProjView, CView)
 
 BEGIN_MESSAGE_MAP(CMainProjView, CView)
-	// Standard printing commands
-	ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
-	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMainProjView::OnFilePrintPreview)
-	ON_WM_CONTEXTMENU()
-	ON_WM_RBUTTONUP()
+    ON_COMMAND(ID_FILE_PRINT, &CView::OnFilePrint)
+    ON_COMMAND(ID_FILE_PRINT_DIRECT, &CView::OnFilePrint)
+    ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CMainProjView::OnFilePrintPreview)
+    ON_WM_CONTEXTMENU()
+    ON_WM_RBUTTONUP()
+    ON_MESSAGE(WM_USER + 1, &CMainProjView::OnGateInsert)
+    ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
-// CMainProjView construction/destruction
-
 CMainProjView::CMainProjView() noexcept
+    : m_CurrentGateResourceID(0), m_IsPlacingGate(false)
 {
-	// TODO: add construction code here
-
 }
 
 CMainProjView::~CMainProjView()
 {
+    if (m_hBackgroundBitmap)
+        ::DeleteObject(m_hBackgroundBitmap);
+
+    for (int i = 0; i < m_GateImages.GetSize(); ++i) {
+        delete m_GateImages[i];  // Safe delete
+    }
+    m_GateImages.RemoveAll();
 }
 
 BOOL CMainProjView::PreCreateWindow(CREATESTRUCT& cs)
 {
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
-
-	return CView::PreCreateWindow(cs);
+    return CView::PreCreateWindow(cs);
 }
 
-// CMainProjView drawing
-
-void CMainProjView::OnDraw(CDC* /*pDC*/)
+LRESULT CMainProjView::OnGateInsert(WPARAM wParam, LPARAM lParam)
 {
-	CMainProjDoc* pDoc = GetDocument();
-	ASSERT_VALID(pDoc);
-	if (!pDoc)
-		return;
-
-	// TODO: add draw code for native data here
+	AfxMessageBox(_T("Control Reached Here!"));
+    m_CurrentGateResourceID = static_cast<int>(wParam);
+    if (m_CurrentGateResourceID != 0)
+    {
+        m_IsPlacingGate = true;
+        AfxMessageBox(_T("Click on screen to place the gate"));
+    }
+    return 0;
 }
-
-
-// CMainProjView printing
-
 
 void CMainProjView::OnFilePrintPreview()
 {
 #ifndef SHARED_HANDLERS
-	AFXPrintPreview(this);
+    AFXPrintPreview(this);
 #endif
 }
 
 BOOL CMainProjView::OnPreparePrinting(CPrintInfo* pInfo)
 {
-	// default preparation
-	return DoPreparePrinting(pInfo);
+    return DoPreparePrinting(pInfo);
 }
 
-void CMainProjView::OnBeginPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
+void CMainProjView::OnBeginPrinting(CDC*, CPrintInfo*) {}
+void CMainProjView::OnEndPrinting(CDC*, CPrintInfo*) {}
+
+void CMainProjView::OnRButtonUp(UINT, CPoint point)
 {
-	// TODO: add extra initialization before printing
+    ClientToScreen(&point);
+    OnContextMenu(this, point);
 }
 
-void CMainProjView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
-{
-	// TODO: add cleanup after printing
-}
-
-void CMainProjView::OnRButtonUp(UINT /* nFlags */, CPoint point)
-{
-	ClientToScreen(&point);
-	OnContextMenu(this, point);
-}
-
-void CMainProjView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
+void CMainProjView::OnContextMenu(CWnd*, CPoint point)
 {
 #ifndef SHARED_HANDLERS
-	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
+    theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
 #endif
 }
 
+// MainProj/MainProjView.cpp
+void CMainProjView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+    if (m_IsPlacingGate && m_CurrentGateResourceID != 0)
+    {
+        // Set the background bitmap to the selected gate's bitmap
+        if (m_hBackgroundBitmap)
+        {
+            ::DeleteObject(m_hBackgroundBitmap);
+            m_hBackgroundBitmap = nullptr;
+        }
+        m_BackgroundResourceID = m_CurrentGateResourceID;
+        m_hBackgroundBitmap = (HBITMAP)::LoadImage(
+            AfxGetInstanceHandle(),
+            MAKEINTRESOURCE(m_BackgroundResourceID),
+            IMAGE_BITMAP,
+            0, 0,
+            LR_CREATEDIBSECTION);
 
-// CMainProjView diagnostics
+        if (!m_hBackgroundBitmap)
+        {
+            AfxMessageBox(_T("Failed to load background bitmap."), MB_ICONERROR);
+        }
+
+        Invalidate();
+        m_IsPlacingGate = false;
+    }
+    CView::OnLButtonDown(nFlags, point);
+}
+
+void CMainProjView::OnDraw(CDC* pDC)
+{
+    // Draw background bitmap if set
+    if (m_hBackgroundBitmap)
+    {
+        CDC memDC;
+        memDC.CreateCompatibleDC(pDC);
+        HBITMAP oldBmp = (HBITMAP)memDC.SelectObject(m_hBackgroundBitmap);
+
+        BITMAP bmpInfo;
+        ::GetObject(m_hBackgroundBitmap, sizeof(BITMAP), &bmpInfo);
+
+        // Stretch to fill the client area
+        CRect clientRect;
+        GetClientRect(&clientRect);
+        pDC->StretchBlt(
+            0, 0, clientRect.Width(), clientRect.Height(),
+            &memDC, 0, 0, bmpInfo.bmWidth, bmpInfo.bmHeight,
+            SRCCOPY
+        );
+
+        memDC.SelectObject(oldBmp);
+    }
+
+    // Optionally, draw gates or other elements here...
+}
 
 #ifdef _DEBUG
-void CMainProjView::AssertValid() const
+void CMainProjView::AssertValid() const { CView::AssertValid(); }
+void CMainProjView::Dump(CDumpContext& dc) const { CView::Dump(dc); }
+CMainProjDoc* CMainProjView::GetDocument() const
 {
-	CView::AssertValid();
+    ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CMainProjDoc)));
+    return (CMainProjDoc*)m_pDocument;
 }
-
-void CMainProjView::Dump(CDumpContext& dc) const
-{
-	CView::Dump(dc);
-}
-
-CMainProjDoc* CMainProjView::GetDocument() const // non-debug version is inline
-{
-	ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CMainProjDoc)));
-	return (CMainProjDoc*)m_pDocument;
-}
-#endif //_DEBUG
-
-
-// CMainProjView message handlers
+#endif

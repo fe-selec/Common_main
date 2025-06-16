@@ -8,6 +8,10 @@ public:
 
 protected:
     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+    afx_msg void OnBnClickedAnd();
+    afx_msg void OnBnClickedOr();
+    afx_msg void OnBnClickedNot();
+    void SendGateInsertMessage(UINT gateID);
     DECLARE_MESSAGE_MAP()
 };
 

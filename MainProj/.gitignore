@@ -1,0 +1,63 @@
+# Ignore Visual Studio temporary files, build results, and user settings
+
+# User-specific files
+*.user
+*.suo
+*.VC.db
+*.VC.VC.opendb
+
+# Build results
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+*.idb
+*.exp
+*.log
+*.ipch
+*.aps
+*.ncb
+*.res
+*.bsc
+
+# Intermediate and output folders
+[Bb]uild/
+[Dd]ebug*/
+[Rr]elease*/
+ipch/
+x64/
+x86/
+out/
+
+# VS folders
+.vs/
+.vscode/
+
+# Backup & temp files
+*.bak
+*.tmp
+*.cache
+*.sdf
+*.opensdf
+*.tlog
+
+# Autosave & editor junk
+*~
+*.swp
+*.swo
+*.orig
+
+# CMake (if ever used)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Crash dumps
+*.dmp
+
+# Ignore generated resource & manifest files
+*.manifest
+*.iobj
+*.ipdb

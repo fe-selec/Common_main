@@ -84,7 +84,11 @@
 #define IDS_FIND_TAB				302
 #define IDS_EXPLORER				305
 #define IDS_EDIT_MENU				306
+#define ID_GATE_AND    2001
+#define ID_GATE_OR     2002
+#define ID_GATE_NOT    2003
 
+#define ID_VIEW_GATEPANE 32771 // Assign a unique value for the identifier#include "Resource.h" // Ensure this header is included to define ID_VIEW_GATEPANE
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

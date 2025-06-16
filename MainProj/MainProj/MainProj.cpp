@@ -27,6 +27,7 @@ BEGIN_MESSAGE_MAP(CMainProjApp, CWinAppEx)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
 	// Standard print setup command
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
+	// ON_MESSAGE(WM_USER + 1, &CMainProjView::OnGateInsert)
 END_MESSAGE_MAP()
 
 

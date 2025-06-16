@@ -28,7 +28,12 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
+	ON_COMMAND(ID_GATE_AND, &CMainFrame::OnGateAnd)
+	ON_COMMAND(ID_GATE_OR, &CMainFrame::OnGateOr)
+	ON_COMMAND(ID_GATE_NOT, &CMainFrame::OnGateNot)
 END_MESSAGE_MAP()
+
+
 
 static UINT indicators[] =
 {
@@ -190,6 +195,15 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// improves the usability of the taskbar because the document name is visible with the thumbnail.
 	ModifyStyle(0, FWS_PREFIXTITLE);
 
+	// MainFrm.cpp
+	if (!m_wndGatePane.Create(_T("Logic Gates"), this, CRect(0, 0, 150, 400), TRUE, ID_VIEW_GATEPANE,
+		WS_CHILD | WS_VISIBLE | CBRS_LEFT))
+	{
+		TRACE0("Failed to create gate pane\n");
+		return -1;
+	}
+
+
 	return 0;
 }
 
@@ -199,6 +213,7 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 		return FALSE;
 	// TODO: Modify the Window class or styles here by modifying
 	//  the CREATESTRUCT cs
+
 
 	return TRUE;
 }
@@ -314,6 +329,23 @@ LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 	ASSERT(bNameValid);
 
 	pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
+
+	int gateType = (int)wp;
+
+	switch (gateType)
+	{
+	case ID_GATE_AND:
+		AfxMessageBox(_T("AND Gate Clicked"));
+		break;
+	case ID_GATE_OR:
+		AfxMessageBox(_T("OR Gate Clicked"));
+		break;
+	case ID_GATE_NOT:
+		AfxMessageBox(_T("NOT Gate Clicked"));
+		break;
+	}
+
+
 	return lres;
 }
 
@@ -427,4 +459,24 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	CMDIFrameWndEx::OnSettingChange(uFlags, lpszSection);
 	m_wndOutput.UpdateFonts();
+}
+void CMainFrame::OnGateAnd()
+{
+	CView* pView = GetActiveView();
+	if (pView)
+		pView->SendMessage(WM_USER + 1, ID_GATE_AND);
+}
+
+void CMainFrame::OnGateOr()
+{
+	CView* pView = GetActiveView();
+	if (pView)
+		pView->SendMessage(WM_USER + 1, ID_GATE_OR);
+}
+
+void CMainFrame::OnGateNot()
+{
+	CView* pView = GetActiveView();
+	if (pView)
+		pView->SendMessage(WM_USER + 1, ID_GATE_NOT);
 }

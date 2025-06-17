@@ -61,6 +61,7 @@ void CGatePane::OnBnClickedAnd()
             CView* pView = (CView*)pChild->GetActiveView();
             if (pView)
             {
+                AfxMessageBox(_T("I am in Cgate Pane - and button clicked!"));
                 pView->SendMessage(WM_USER + 1, ID_GATE_AND);
             }
         }
@@ -69,42 +70,57 @@ void CGatePane::OnBnClickedAnd()
 
 void CGatePane::OnBnClickedOr()
 {
-    CFrameWnd* pFrame = (CFrameWnd*)AfxGetMainWnd();
+    // AfxMessageBox(_T("AND button clicked!"));
+     // AfxGetMainWnd()->SendMessage(WM_USER + 1, ID_GATE_AND);
+
+    CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetMainWnd();
     if (pFrame)
     {
-        CView* pView = pFrame->GetActiveView();
-        if (pView)
+        CMDIChildWnd* pChild = (CMDIChildWnd*)pFrame->GetActiveFrame();
+        if (pChild)
         {
-            pView->SendMessage(WM_USER + 1, ID_GATE_OR);
+            CView* pView = (CView*)pChild->GetActiveView();
+            if (pView)
+            {
+                AfxMessageBox(_T("I am in Cgate Pane - or button clicked!"));
+                pView->SendMessage(WM_USER + 1, ID_GATE_OR);
+            }
         }
     }
 }
 
 void CGatePane::OnBnClickedNot()
 {
-    CFrameWnd* pFrame = (CFrameWnd*)AfxGetMainWnd();
+    CMDIFrameWnd* pFrame = (CMDIFrameWnd*)AfxGetMainWnd();
     if (pFrame)
     {
-        CView* pView = pFrame->GetActiveView();
-        if (pView)
+        CMDIChildWnd* pChild = (CMDIChildWnd*)pFrame->GetActiveFrame();
+        if (pChild)
         {
-            pView->SendMessage(WM_USER + 1, ID_GATE_NOT);
+            CView* pView = (CView*)pChild->GetActiveView();
+            if (pView)
+            {
+                AfxMessageBox(_T("I am in Cgate Pane - or button clicked!"));
+                pView->SendMessage(WM_USER + 1, ID_GATE_NOT);
+            }
         }
     }
 }
 
-void CGatePane::SendGateInsertMessage(UINT gateID)
-{
-    CFrameWnd* pFrame = (CFrameWnd*)AfxGetMainWnd();
-    if (pFrame)
-    {
-        CView* pView = pFrame->GetActiveView();
-        if (pView)
-        {
-            pView->SendMessage(WM_USER + 1, gateID);
-        }
-    }
-}
+//void CGatePane::SendGateInsertMessage(UINT gateID)
+//{
+//    CFrameWnd* pFrame = (CFrameWnd*)AfxGetMainWnd();
+//    if (pFrame)
+//    {
+//        CView* pView = pFrame->GetActiveView();
+//        if (pView)
+//        {
+//            pView->SendMessage(WM_USER + 1, gateID);
+//			pView->SendMessage(WM_USER + 2, gateID);
+//			pView->SendMessage(WM_USER + 3, gateID);
+//        }
+//    }
+//}
 
 
 

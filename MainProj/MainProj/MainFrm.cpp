@@ -475,15 +475,23 @@ void CMainFrame::OnGateAnd()
 
 void CMainFrame::OnGateOr()
 {
-	CView* pView = GetActiveView();
-	if (pView)
-		pView->SendMessage(WM_USER + 1, ID_GATE_OR);
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	if (pFrame) {
+		CView* pView = GetActiveView();
+		if (pView) {
+			pView->SendMessage(WM_USER + 2, ID_GATE_OR);
+		}
+	}	
 }
 
 void CMainFrame::OnGateNot()
 {
-	CView* pView = GetActiveView();
-	if (pView)
-		pView->SendMessage(WM_USER + 1, ID_GATE_NOT);
+	CMainFrame* pFrame = (CMainFrame*)AfxGetMainWnd();
+	if (pFrame) {
+		CView* pView = GetActiveView();
+		if (pView) {
+			pView->SendMessage(WM_USER + 3, ID_GATE_NOT);
+		}
+	}
 }
 

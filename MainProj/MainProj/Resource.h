@@ -90,6 +90,9 @@
 #define IDB_BITMAP3                     313
 #define IDB_BITMAP4                     314
 #define IDB_BITMAP5                     315
+#define IDB_BITMAP6                     316
+#define IDB_BITMAP7                     317
+#define IDB_BITMAP8                     319
 #define ID_GATE_AND                     2001
 #define ID_GATE_OR                      2002
 #define ID_GATE_NOT                     2003
@@ -99,7 +102,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_RESOURCE_VALUE        320
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310

@@ -23,6 +23,7 @@
 struct GateImage {
     CPoint position;
     UINT resourceID;
+	HBITMAP hBitmap;
 };
 
 class CMainProjView : public CView
@@ -31,13 +32,17 @@ protected:
     CMainProjView() noexcept;
     DECLARE_DYNCREATE(CMainProjView)
 
+protected:
+    CPoint m_BitmapPos;
+
 public:
     CMainProjDoc* GetDocument() const;
-    CArray<GateImage*, GateImage*> m_GateImages;
+   // CArray<GateImage*, GateImage*> m_GateImages;
     int m_CurrentGateResourceID;
     bool m_IsPlacingGate;
     HBITMAP m_hBackgroundBitmap = nullptr;
     UINT m_BackgroundResourceID = 0;
+    CArray<GateImage*, GateImage*> m_PlacedBitmaps;
 
     virtual void OnDraw(CDC* pDC);
     virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
